@@ -1,4 +1,6 @@
 import 'package:controle_de_abastecimento/core/routing/auth_gate.dart';
+import 'package:controle_de_abastecimento/features/vehicles/presentation/pages/vehicle_form_page.dart';
+import 'package:controle_de_abastecimento/features/vehicles/presentation/pages/vehicles_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/auth/application/auth_controller.dart';
@@ -6,6 +8,8 @@ import 'features/auth/infrastructure/auth_service.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/home_page.dart';
+import 'features/vehicles/application/vehicle_controller.dart';
+import 'features/vehicles/infrastructure/vehicle_service.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -18,6 +22,10 @@ class App extends StatelessWidget {
         ChangeNotifierProvider<AuthController>(
           create: (context) => AuthController(context.read<AuthService>()),
         ),
+        Provider<VehicleService>(create: (_) => VehicleService()),
+        ChangeNotifierProvider<VehicleController>(
+          create: (context) => VehicleController(context.read<VehicleService>()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -27,6 +35,8 @@ class App extends StatelessWidget {
           '/login': (_) => const LoginPage(),
           '/register': (_) => const RegisterPage(),
           '/home': (_) => const HomePage(),
+          '/vehicles': (_) => const VehiclesListPage(),
+          '/vehicle_form': (_) => const VehicleFormPage(),
         },
       ),
     );

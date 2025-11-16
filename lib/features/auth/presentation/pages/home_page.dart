@@ -1,32 +1,39 @@
-import 'package:controle_de_abastecimento/features/auth/application/auth_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:controle_de_abastecimento/features/auth/application/auth_controller.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      appBar: AppBar(title: Text("Tela Home")),
-      body: Column(
-        children: [
-          Text('Bem-vindo, ${user?.email ?? 'usuário'}'),
+      appBar: AppBar(title: const Text("Tela Home")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Bem-vindo!',
+              style: TextStyle(fontSize: 20),
+            ),
 
-          ElevatedButton(
-            onPressed: () async {
-              await context.read<AuthController>().signOut();
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/login',
-                (route) => false,
-              );
-            },
-            child: Text("Sair"),
-          ),
-        ],
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/vehicles');
+              },
+              child: const Text("Gerenciar Veículos"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                context.read<AuthController>().signOut();
+              },
+              child: const Text("Sair"),
+            ),
+          ],
+        ),
       ),
     );
   }
