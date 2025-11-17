@@ -1,4 +1,5 @@
 import 'package:controle_de_abastecimento/core/routing/auth_gate.dart';
+import 'package:controle_de_abastecimento/core/theme/app_theme.dart';
 import 'package:controle_de_abastecimento/features/vehicles/presentation/pages/vehicle_form_page.dart';
 import 'package:controle_de_abastecimento/features/vehicles/presentation/pages/vehicles_list_page.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
         title: 'Controle Abastecimento App',
         home: const AuthGate(),
         routes: {

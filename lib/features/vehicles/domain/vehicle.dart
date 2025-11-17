@@ -1,12 +1,20 @@
-
 class Vehicle {
-   String id;
-   String donoID;
-   String modelo;
-   String placa;
-   String marca;
-   String ano;
-   String tipoCombustivel;
+  String id;
+  String donoID;
+  String modelo;
+  String placa;
+  String marca;
+  String ano;
+  String tipoCombustivel;
+
+  static const List<String> tiposCombustivel = [
+    'Gasolina',
+    'Gasolina aditivada',
+    'Etanol',
+    'Diesel',
+    'Diesel S10',
+    'Flex (Gasolina/Etanol)',
+  ];
 
   Vehicle({
     required this.id,
@@ -18,7 +26,7 @@ class Vehicle {
     required this.tipoCombustivel,
   });
 
-  Vehicle.fromMap(Map<String, dynamic> map,String idDoc)
+  Vehicle.fromMap(Map<String, dynamic> map, String idDoc)
       : id = idDoc,
         donoID = map['donoID'],
         modelo = map['modelo'],

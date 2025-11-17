@@ -9,7 +9,7 @@ class Refuel {
   double valorPago;
   double quilometragem;
   String tipoCombustivel;
-  double consumo; // pode ser calculado ou informado
+  double consumo;
   String observacao;
 
   Refuel({

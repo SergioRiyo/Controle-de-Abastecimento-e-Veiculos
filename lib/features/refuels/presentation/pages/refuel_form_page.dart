@@ -25,30 +25,43 @@ class _RefuelFormPageState extends State<RefuelFormPage> {
   final litrosController = TextEditingController();
   final valorController = TextEditingController();
   final kmController = TextEditingController();
-  final tipoCombustivelController = TextEditingController();
   final observacaoController = TextEditingController();
+
   DateTime dataAbastecimento = DateTime.now();
+  String? _selectedCombustivel; 
+
+  bool get isEditing => widget.refuel != null;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.refuel != null) {
+    if (isEditing) {
       final r = widget.refuel!;
       litrosController.text = r.quantidadeLitros.toString();
       valorController.text = r.valorPago.toString();
       kmController.text = r.quilometragem.toString();
-      tipoCombustivelController.text = r.tipoCombustivel;
       observacaoController.text = r.observacao;
       dataAbastecimento = r.data;
+      _selectedCombustivel = r.tipoCombustivel;
+    } else {
+      _selectedCombustivel = widget.vehicle.tipoCombustivel;
     }
+  }
+
+  @override
+  void dispose() {
+    litrosController.dispose();
+    valorController.dispose();
+    kmController.dispose();
+    observacaoController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = context.read<RefuelController>();
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final isEditing = widget.refuel != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -61,42 +74,77 @@ class _RefuelFormPageState extends State<RefuelFormPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Data (por simplicidade deixamos fixa, mas dá pra abrir datepicker)
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Data: ${dataAbastecimento.day}/${dataAbastecimento.month}/${dataAbastecimento.year}',
+                    'Data: ${dataAbastecimento.day.toString().padLeft(2, '0')}/'
+                    '${dataAbastecimento.month.toString().padLeft(2, '0')}/'
+                    '${dataAbastecimento.year}',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(height: 16),
 
                 TextFormField(
                   controller: litrosController,
-                  decoration: const InputDecoration(labelText: 'Quantidade de litros'),
+                  decoration: const InputDecoration(
+                    labelText: 'Quantidade de litros',
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (v) =>
                       v == null || v.isEmpty ? 'Informe os litros' : null,
                 ),
+                const SizedBox(height: 12),
+
                 TextFormField(
                   controller: valorController,
-                  decoration: const InputDecoration(labelText: 'Valor pago'),
+                  decoration: const InputDecoration(
+                    labelText: 'Valor pago',
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (v) =>
                       v == null || v.isEmpty ? 'Informe o valor' : null,
                 ),
+                const SizedBox(height: 12),
+
                 TextFormField(
                   controller: kmController,
-                  decoration:
-                      const InputDecoration(labelText: 'Quilometragem (km)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Km rodados',
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (v) =>
                       v == null || v.isEmpty ? 'Informe a quilometragem' : null,
                 ),
-                TextFormField(
-                  controller: tipoCombustivelController,
-                  decoration:
-                      const InputDecoration(labelText: 'Tipo de combustível'),
+                const SizedBox(height: 12),
+
+
+                DropdownButtonFormField<String>(
+                  value: _selectedCombustivel,
+                  items: Vehicle.tiposCombustivel
+                      .map(
+                        (tipo) => DropdownMenuItem<String>(
+                          value: tipo,
+                          child: Text(tipo),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCombustivel = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Tipo de combustível',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                      value == null || value.isEmpty
+                          ? 'Selecione o tipo de combustível'
+                          : null,
                 ),
+                const SizedBox(height: 12),
+
                 TextFormField(
                   controller: observacaoController,
                   decoration:
@@ -113,8 +161,8 @@ class _RefuelFormPageState extends State<RefuelFormPage> {
                     final litros = double.parse(litrosController.text);
                     final valor = double.parse(valorController.text);
                     final km = double.parse(kmController.text);
+                    final tipoCombustivel = _selectedCombustivel!;
 
-                    // consumo simples: km / litros
                     final consumo = litros > 0 ? km / litros : 0.0;
 
                     if (isEditing) {
@@ -127,7 +175,7 @@ class _RefuelFormPageState extends State<RefuelFormPage> {
                         quantidadeLitros: litros,
                         valorPago: valor,
                         quilometragem: km,
-                        tipoCombustivel: tipoCombustivelController.text,
+                        tipoCombustivel: tipoCombustivel,
                         consumo: consumo,
                         observacao: observacaoController.text,
                       );
@@ -141,7 +189,7 @@ class _RefuelFormPageState extends State<RefuelFormPage> {
                         quantidadeLitros: litros,
                         valorPago: valor,
                         quilometragem: km,
-                        tipoCombustivel: tipoCombustivelController.text,
+                        tipoCombustivel: tipoCombustivel,
                         consumo: consumo,
                         observacao: observacaoController.text,
                       );
