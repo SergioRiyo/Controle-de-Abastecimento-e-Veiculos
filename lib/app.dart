@@ -10,6 +10,8 @@ import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/home_page.dart';
 import 'features/vehicles/application/vehicle_controller.dart';
 import 'features/vehicles/infrastructure/vehicle_service.dart';
+import 'features/refuels/infrastructure/refuel_service.dart';
+import 'features/refuels/application/refuel_controller.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -24,7 +26,12 @@ class App extends StatelessWidget {
         ),
         Provider<VehicleService>(create: (_) => VehicleService()),
         ChangeNotifierProvider<VehicleController>(
-          create: (context) => VehicleController(context.read<VehicleService>()),
+          create: (context) =>
+              VehicleController(context.read<VehicleService>()),
+        ),
+        Provider<RefuelService>(create: (_) => RefuelService()),
+        ChangeNotifierProvider<RefuelController>(
+          create: (context) => RefuelController(context.read<RefuelService>()),
         ),
       ],
       child: MaterialApp(
@@ -37,6 +44,7 @@ class App extends StatelessWidget {
           '/home': (_) => const HomePage(),
           '/vehicles': (_) => const VehiclesListPage(),
           '/vehicle_form': (_) => const VehicleFormPage(),
+          '/refuels': (_) => const VehiclesListPage(),
         },
       ),
     );

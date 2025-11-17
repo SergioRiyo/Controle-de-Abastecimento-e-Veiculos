@@ -1,3 +1,4 @@
+import 'package:controle_de_abastecimento/features/refuels/presentation/pages/refuels_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,6 +66,19 @@ class _VehiclesListPageState extends State<VehiclesListPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
+                  icon: const Icon(Icons.local_gas_station),
+                  tooltip: 'Abastecimentos',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => RefuelsPage(),
+                      ),
+                    );
+                  },
+                ),
+
+                IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
                     Navigator.push(
@@ -75,6 +89,7 @@ class _VehiclesListPageState extends State<VehiclesListPage> {
                     );
                   },
                 ),
+
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () async {
@@ -106,8 +121,7 @@ class _VehiclesListPageState extends State<VehiclesListPage> {
 
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Veículo excluído'),
+                          const SnackBar(content: Text('Veículo excluído'),
                           ),
                         );
                       } catch (e) {
